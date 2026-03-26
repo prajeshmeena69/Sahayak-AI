@@ -1,66 +1,84 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mic, Globe, Brain, FileText, ArrowRight, CheckCircle, Volume2 } from "lucide-react";
+import { Mic, Globe, Brain, FileText, ArrowRight, CheckCircle, Volume2, Leaf, Shield, Users, Sparkles } from "lucide-react";
 import heroFarmer from "@/assets/hero-farmer.jpg";
+import leafDecoration from "@/assets/leaf-decoration.png";
+import fieldLandscape from "@/assets/field-landscape.jpg";
 import logo from "@/assets/logo.png";
 
 const content = {
   hi: {
-    headline: "अपनी भाषा में सरकारी योजना जानिए",
-    subtext: "बोलकर पूछिए और तुरंत पता करें कि आप eligible हैं या नहीं",
+    headline: "अपनी भाषा में",
+    headlineHighlight: "सरकारी योजना",
+    headlineSuffix: "जानिए",
+    subtext: "बोलकर पूछिए और तुरंत पता करें कि आप eligible हैं या नहीं। कोई form भरने की ज़रूरत नहीं।",
     cta: "🎤 बोलकर शुरू करें",
-    badges: ["सिर्फ 30 सेकंड में", "कोई signup नहीं", "हिंदी में उपलब्ध"],
+    badges: ["⚡ सिर्फ 30 सेकंड में", "🔒 कोई signup नहीं", "🗣️ हिंदी में उपलब्ध"],
     features: [
-      { icon: Mic, title: "बोलकर पूछिए", desc: "टाइप करने की ज़रूरत नहीं" },
-      { icon: Globe, title: "अपनी भाषा में", desc: "हिंदी में बात करें" },
-      { icon: Brain, title: "समझिए क्यों eligible हैं", desc: "आसान भाषा में जवाब" },
-      { icon: FileText, title: "Apply कैसे करें जानिए", desc: "पूरी प्रक्रिया स्टेप बाय स्टेप" },
+      { icon: Mic, title: "बोलकर पूछिए", desc: "टाइप करने की ज़रूरत नहीं, बस बोलिए", color: "primary" },
+      { icon: Globe, title: "अपनी भाषा में", desc: "हिंदी में बात करें, अपनी भाषा में समझें", color: "accent" },
+      { icon: Brain, title: "समझिए क्यों eligible हैं", desc: "AI आसान भाषा में जवाब देता है", color: "warm" },
+      { icon: FileText, title: "Apply कैसे करें", desc: "पूरी प्रक्रिया स्टेप बाय स्टेप", color: "primary" },
     ],
+    featuresTitle: "Sahayak AI क्या करता है?",
     howTitle: "कैसे काम करता है?",
+    howSubtitle: "बस 3 आसान कदम",
     steps: [
-      { num: "1", title: "सवाल पूछिए", desc: "माइक बटन दबाकर अपना सवाल बोलिए" },
-      { num: "2", title: "2-3 प्रश्नों का जवाब दीजिए", desc: "हाँ या ना में जवाब दें" },
-      { num: "3", title: "तुरंत result पाइए", desc: "अपनी eligibility जानिए" },
+      { num: "1", title: "सवाल पूछिए", desc: "माइक बटन दबाकर अपना सवाल बोलिए", icon: Mic },
+      { num: "2", title: "जवाब दीजिए", desc: "2-3 आसान प्रश्नों का हाँ/ना में जवाब दें", icon: Users },
+      { num: "3", title: "Result पाइए", desc: "तुरंत अपनी eligibility और योजना जानिए", icon: Sparkles },
     ],
     demoTitle: "ऐसा दिखेगा आपका result",
+    demoSubtitle: "असली result का preview देखें",
     schemeName: "PM-KISAN",
     schemeBenefit: "₹6,000/वर्ष",
     schemeReason: "आप eligible हैं क्योंकि आप छोटे किसान हैं",
     eligible: "✅ आप eligible हैं!",
-    impactTitle: "आज तक",
+    impactTitle: "किसानों का भरोसा",
     impactCount: "1,248+",
-    impactDesc: "किसानों ने अपनी eligibility check की",
-    finalCta: "अभी try करें",
+    impactDesc: "किसानों ने अज तक अपनी eligibility check की",
+    impactSub: "और यह संख्या हर दिन बढ़ रही है",
+    finalCta: "अभी अपनी eligibility check करें",
+    finalCtaDesc: "कोई signup नहीं, कोई form नहीं — बस बोलिए",
     finalCtaBtn: "बोलकर शुरू करें",
+    trustItems: ["100% मुफ़्त", "डाटा सुरक्षित", "सरकार द्वारा मान्य योजनाएं"],
   },
   en: {
-    headline: "Know Government Schemes in Your Language",
-    subtext: "Ask by speaking and instantly find out if you're eligible",
+    headline: "Know",
+    headlineHighlight: "Government Schemes",
+    headlineSuffix: "in Your Language",
+    subtext: "Ask by speaking and instantly find out if you're eligible. No forms to fill.",
     cta: "🎤 Start by Speaking",
-    badges: ["Just 30 seconds", "No signup needed", "Available in Hindi"],
+    badges: ["⚡ Just 30 seconds", "🔒 No signup needed", "🗣️ Available in Hindi"],
     features: [
-      { icon: Mic, title: "Ask by speaking", desc: "No typing required" },
-      { icon: Globe, title: "In your language", desc: "Talk in Hindi" },
-      { icon: Brain, title: "Understand why you're eligible", desc: "Answers in simple language" },
-      { icon: FileText, title: "Know how to apply", desc: "Step by step process" },
+      { icon: Mic, title: "Ask by speaking", desc: "No typing required, just speak", color: "primary" },
+      { icon: Globe, title: "In your language", desc: "Talk in Hindi, understand in your language", color: "accent" },
+      { icon: Brain, title: "Know why you're eligible", desc: "AI answers in simple language", color: "warm" },
+      { icon: FileText, title: "Know how to apply", desc: "Step by step complete process", color: "primary" },
     ],
+    featuresTitle: "What does Sahayak AI do?",
     howTitle: "How does it work?",
+    howSubtitle: "Just 3 simple steps",
     steps: [
-      { num: "1", title: "Ask a question", desc: "Press the mic button and speak" },
-      { num: "2", title: "Answer 2-3 questions", desc: "Simple yes or no answers" },
-      { num: "3", title: "Get instant result", desc: "Know your eligibility" },
+      { num: "1", title: "Ask a question", desc: "Press the mic button and speak your question", icon: Mic },
+      { num: "2", title: "Answer questions", desc: "Simple yes or no answers to 2-3 questions", icon: Users },
+      { num: "3", title: "Get your result", desc: "Instantly know your eligibility and scheme details", icon: Sparkles },
     ],
     demoTitle: "Your result will look like this",
+    demoSubtitle: "Preview of an actual result",
     schemeName: "PM-KISAN",
     schemeBenefit: "₹6,000/year",
     schemeReason: "You are eligible because you are a small farmer",
     eligible: "✅ You are eligible!",
-    impactTitle: "So far",
+    impactTitle: "Trusted by Farmers",
     impactCount: "1,248+",
-    impactDesc: "farmers checked their eligibility",
-    finalCta: "Try it now",
+    impactDesc: "farmers checked their eligibility so far",
+    impactSub: "and this number is growing every day",
+    finalCta: "Check your eligibility now",
+    finalCtaDesc: "No signup, no forms — just speak",
     finalCtaBtn: "Start by Speaking",
+    trustItems: ["100% Free", "Data Secure", "Government Verified Schemes"],
   },
 };
 
@@ -72,186 +90,386 @@ const LandingPage = ({ lang }: LandingPageProps) => {
   const t = content[lang];
 
   const fadeUp = {
-    initial: { opacity: 0, y: 24 },
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-50px" },
+    transition: { duration: 0.6, ease: "easeOut" },
+  };
+
+  const stagger = {
+    initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
-    transition: { duration: 0.5 },
+  };
+
+  const featureColors: Record<string, { bg: string; icon: string; border: string }> = {
+    primary: { bg: "bg-primary-light", icon: "text-primary", border: "border-primary/10" },
+    accent: { bg: "bg-accent-light", icon: "text-accent", border: "border-accent/10" },
+    warm: { bg: "bg-[hsl(var(--warm-light))]", icon: "text-[hsl(var(--warm))]", border: "border-[hsl(var(--warm))]/10" },
   };
 
   return (
-    <div className="pt-16">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
+    <div className="pt-16 overflow-hidden">
+      {/* ===== HERO SECTION ===== */}
+      <section className="relative min-h-[90vh] flex items-center">
+        {/* Background decorations */}
+        <div className="absolute inset-0 bg-gradient-earth -z-20" />
+        <img
+          src={leafDecoration}
+          alt=""
+          className="absolute -top-10 -right-20 w-64 md:w-96 opacity-20 rotate-12 -z-10 pointer-events-none select-none"
+          loading="lazy"
+          width={800}
+          height={800}
+        />
+        <img
+          src={leafDecoration}
+          alt=""
+          className="absolute -bottom-20 -left-16 w-48 md:w-72 opacity-15 -rotate-45 -z-10 pointer-events-none select-none"
+          loading="lazy"
+          width={800}
+          height={800}
+        />
+        {/* Decorative circles */}
+        <div className="absolute top-20 right-1/4 w-64 h-64 rounded-full bg-primary/5 blur-3xl -z-10" />
+        <div className="absolute bottom-10 left-1/4 w-48 h-48 rounded-full bg-accent/5 blur-3xl -z-10" />
+
         <div className="container py-12 md:py-20">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <motion.div {...fadeUp} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <motion.div {...fadeUp} className="space-y-8">
+              {/* Badges */}
               <div className="flex flex-wrap gap-2">
                 {t.badges.map((b) => (
-                  <span key={b} className="px-3 py-1 rounded-full text-xs font-medium bg-primary-light text-primary border border-primary/10">
+                  <span key={b} className="px-4 py-1.5 rounded-full text-xs font-semibold bg-card border border-border shadow-soft text-foreground">
                     {b}
                   </span>
                 ))}
               </div>
-              <h1 className="text-3xl md:text-5xl font-extrabold leading-tight text-foreground">
-                {t.headline}
+
+              {/* Headline */}
+              <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.15] text-foreground">
+                {t.headline}{" "}
+                <span className="text-gradient-primary">{t.headlineHighlight}</span>{" "}
+                {t.headlineSuffix}
               </h1>
-              <p className="text-lg text-muted-foreground max-w-md">{t.subtext}</p>
-              <Link to="/app">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="mt-2 px-8 py-4 rounded-2xl bg-gradient-hero text-primary-foreground text-lg font-semibold shadow-elevated hover:shadow-card transition-all"
-                >
-                  {t.cta}
-                </motion.button>
-              </Link>
+
+              <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">{t.subtext}</p>
+
+              {/* CTA */}
+              <div className="flex flex-col sm:flex-row items-start gap-4">
+                <Link to="/app">
+                  <motion.button
+                    whileHover={{ scale: 1.03, boxShadow: "0 0 30px -5px hsl(142 52% 36% / 0.4)" }}
+                    whileTap={{ scale: 0.97 }}
+                    className="px-10 py-5 rounded-2xl bg-gradient-hero text-primary-foreground text-lg font-bold shadow-elevated transition-all"
+                  >
+                    {t.cta}
+                  </motion.button>
+                </Link>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Shield size={16} className="text-primary" />
+                  {t.trustItems[1]}
+                </div>
+              </div>
+
+              {/* Trust strip */}
+              <div className="flex items-center gap-4 pt-2">
+                {t.trustItems.map((item, i) => (
+                  <div key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <CheckCircle size={14} className="text-primary" />
+                    {item}
+                  </div>
+                ))}
+              </div>
             </motion.div>
 
+            {/* Hero Image */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.9, x: 30 }}
+              whileInView={{ opacity: 1, scale: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
               className="relative"
             >
-              <div className="rounded-3xl overflow-hidden shadow-elevated">
+              {/* Decorative ring behind image */}
+              <div className="absolute -inset-4 rounded-[2rem] border-2 border-dashed border-primary/15 -z-10" />
+              <div className="absolute -inset-8 rounded-[2.5rem] border border-primary/5 -z-10" />
+
+              <div className="rounded-3xl overflow-hidden shadow-elevated relative">
                 <img src={heroFarmer} alt="Indian farmer using smartphone" className="w-full h-auto object-cover" width={1280} height={768} />
+                {/* Gradient overlay at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
-              {/* Floating card */}
+
+              {/* Floating eligibility card */}
               <motion.div
-                animate={{ y: [0, -8, 0] }}
+                animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-4 -left-4 md:left-4 bg-card rounded-2xl p-4 shadow-elevated border border-border max-w-[220px]"
+                className="absolute -bottom-6 -left-4 md:left-6 glass-strong rounded-2xl p-4 shadow-elevated border border-border/50 max-w-[240px]"
               >
-                <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-                  <CheckCircle size={18} />
+                <div className="flex items-center gap-2 text-primary font-bold text-sm">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <CheckCircle size={18} />
+                  </div>
                   {t.eligible}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{t.schemeName} • {t.schemeBenefit}</p>
+                <p className="text-xs text-muted-foreground mt-1.5">{t.schemeName} • {t.schemeBenefit}</p>
+              </motion.div>
+
+              {/* Floating mic indicator */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute -top-3 -right-3 md:right-6 md:top-4 glass-strong rounded-xl p-3 shadow-card border border-border/50"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-hero flex items-center justify-center">
+                    <Mic size={14} className="text-primary-foreground" />
+                  </div>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <motion.div
+                        key={i}
+                        animate={{ scaleY: [0.4, 1, 0.4] }}
+                        transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.1 }}
+                        className="w-1 h-4 rounded-full bg-primary"
+                      />
+                    ))}
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           </div>
         </div>
-        {/* Background accent */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary-light/30 -z-10 rounded-bl-[100px]" />
       </section>
 
-      {/* Features */}
-      <section className="py-16 md:py-24 bg-secondary">
+      {/* ===== FEATURES ===== */}
+      <section className="py-20 md:py-28 relative">
+        <div className="absolute inset-0 bg-secondary -z-10" />
+        {/* Organic curved separator at top */}
+        <div className="absolute -top-16 left-0 right-0 h-16 -z-10">
+          <svg viewBox="0 0 1440 64" fill="none" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0 64V32C240 0 480 0 720 32C960 64 1200 64 1440 32V64H0Z" fill="hsl(120 20% 96%)" />
+          </svg>
+        </div>
+
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {t.features.map((f, i) => (
+          <motion.div {...fadeUp} className="text-center mb-14">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light text-primary text-sm font-semibold mb-4">
+              <Leaf size={16} /> Features
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+              {t.featuresTitle}
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+            {t.features.map((f, i) => {
+              const colors = featureColors[f.color] || featureColors.primary;
+              return (
+                <motion.div
+                  key={i}
+                  {...stagger}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  whileHover={{ y: -6, boxShadow: "0 12px 40px -8px hsl(142 30% 30% / 0.15)" }}
+                  className={`bg-card rounded-3xl p-7 shadow-soft border ${colors.border} text-center space-y-4 cursor-default transition-all`}
+                >
+                  <div className={`w-16 h-16 rounded-2xl ${colors.bg} flex items-center justify-center mx-auto`}>
+                    <f.icon size={28} className={colors.icon} />
+                  </div>
+                  <h3 className="font-bold text-foreground text-base">{f.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== HOW IT WORKS ===== */}
+      <section className="py-20 md:py-28 relative">
+        <div className="container">
+          <motion.div {...fadeUp} className="text-center mb-16">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-light text-accent text-sm font-semibold mb-4">
+              <Sparkles size={16} /> {t.howSubtitle}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+              {t.howTitle}
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-14 left-[20%] right-[20%] h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 z-0" />
+
+            {t.steps.map((s, i) => (
               <motion.div
                 key={i}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-card rounded-2xl p-6 shadow-soft text-center space-y-3 hover:shadow-card transition-shadow"
+                {...stagger}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                className="relative flex flex-col items-center text-center space-y-5 z-10"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center mx-auto">
-                  <f.icon size={24} className="text-primary" />
+                {/* Step circle */}
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-full bg-gradient-hero flex items-center justify-center shadow-glow">
+                    <s.icon size={32} className="text-primary-foreground" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-card shadow-card flex items-center justify-center border-2 border-primary text-primary font-bold text-sm">
+                    {s.num}
+                  </div>
                 </div>
-                <h3 className="font-semibold text-foreground text-sm md:text-base">{f.title}</h3>
-                <p className="text-xs text-muted-foreground">{f.desc}</p>
+                <div>
+                  <h3 className="font-bold text-foreground text-lg mb-1">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground max-w-[220px] mx-auto">{s.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-16 md:py-24">
-        <div className="container">
-          <motion.h2 {...fadeUp} className="text-2xl md:text-3xl font-bold text-center text-foreground mb-12">
-            {t.howTitle}
-          </motion.h2>
-          <div className="flex flex-col md:flex-row items-start justify-center gap-6 md:gap-0">
-            {t.steps.map((s, i) => (
-              <React.Fragment key={i}>
-                <motion.div {...fadeUp} transition={{ duration: 0.5, delay: i * 0.15 }} className="flex items-center gap-4 md:flex-col md:text-center md:w-48">
-                  <div className="w-14 h-14 rounded-full bg-gradient-hero text-primary-foreground flex items-center justify-center text-xl font-bold shrink-0">
-                    {s.num}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">{s.title}</h3>
-                    <p className="text-sm text-muted-foreground">{s.desc}</p>
-                  </div>
-                </motion.div>
-                {i < t.steps.length - 1 && (
-                  <div className="hidden md:flex items-center pt-5">
-                    <ArrowRight className="text-primary/30 mx-2" size={24} />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+      {/* ===== DEMO PREVIEW with landscape background ===== */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        {/* Background field image */}
+        <div className="absolute inset-0 -z-20">
+          <img src={fieldLandscape} alt="" className="w-full h-full object-cover" loading="lazy" width={1920} height={600} />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/85 to-background/95" />
         </div>
-      </section>
 
-      {/* Demo Preview */}
-      <section className="py-16 md:py-24 bg-secondary">
-        <div className="container max-w-lg">
-          <motion.h2 {...fadeUp} className="text-2xl md:text-3xl font-bold text-center text-foreground mb-8">
-            {t.demoTitle}
-          </motion.h2>
+        <div className="container max-w-2xl relative z-10">
+          <motion.div {...fadeUp} className="text-center mb-10">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light text-primary text-sm font-semibold mb-4">
+              Preview
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">{t.demoTitle}</h2>
+            <p className="text-muted-foreground mt-2">{t.demoSubtitle}</p>
+          </motion.div>
+
           <motion.div
             {...fadeUp}
-            className="bg-card rounded-3xl p-6 md:p-8 shadow-elevated border border-border space-y-4"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="glass-strong rounded-3xl p-8 md:p-10 shadow-elevated border border-border/50 space-y-5"
           >
-            <div className="text-center">
-              <span className="text-2xl font-bold text-primary">{t.eligible}</span>
-            </div>
-            <div className="bg-primary-light rounded-2xl p-5 space-y-2">
+            {/* Status badge */}
+            <motion.div
+              initial={{ scale: 0.8 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary text-lg font-bold">
+                <CheckCircle size={22} />
+                {t.eligible}
+              </span>
+            </motion.div>
+
+            {/* Scheme card */}
+            <div className="bg-primary-light/60 rounded-2xl p-6 space-y-3 border border-primary/10">
               <div className="flex justify-between items-center">
-                <span className="font-bold text-foreground text-lg">{t.schemeName}</span>
-                <span className="text-primary font-bold text-lg">{t.schemeBenefit}</span>
+                <span className="font-extrabold text-foreground text-xl">{t.schemeName}</span>
+                <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-bold text-sm">{t.schemeBenefit}</span>
               </div>
-              <p className="text-sm text-muted-foreground">{t.schemeReason}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t.schemeReason}</p>
             </div>
-            <button className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-xl bg-accent/10 text-accent font-medium text-sm hover:bg-accent/20 transition-colors">
+
+            {/* Listen button */}
+            <button className="flex items-center gap-2 mx-auto px-6 py-3 rounded-xl bg-accent/10 text-accent font-semibold text-sm hover:bg-accent/20 transition-colors border border-accent/10">
               <Volume2 size={18} /> {lang === "hi" ? "🔊 सुनो" : "🔊 Listen"}
             </button>
           </motion.div>
         </div>
       </section>
 
-      {/* Impact Counter */}
-      <section className="py-16 md:py-20">
-        <div className="container text-center">
-          <motion.div {...fadeUp} className="space-y-2">
-            <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">{t.impactTitle}</p>
-            <p className="text-5xl md:text-7xl font-extrabold text-gradient-primary">{t.impactCount}</p>
-            <p className="text-lg text-muted-foreground">{t.impactDesc}</p>
+      {/* ===== IMPACT COUNTER ===== */}
+      <section className="py-20 md:py-28">
+        <div className="container">
+          <motion.div
+            {...fadeUp}
+            className="relative bg-card rounded-[2rem] p-10 md:p-16 text-center shadow-card border border-border overflow-hidden"
+          >
+            {/* Decoration */}
+            <img
+              src={leafDecoration}
+              alt=""
+              className="absolute -top-10 -right-10 w-40 opacity-10 rotate-45 pointer-events-none select-none"
+              loading="lazy"
+              width={800}
+              height={800}
+            />
+            <img
+              src={leafDecoration}
+              alt=""
+              className="absolute -bottom-10 -left-10 w-40 opacity-10 -rotate-90 pointer-events-none select-none"
+              loading="lazy"
+              width={800}
+              height={800}
+            />
+
+            <p className="text-sm font-semibold text-primary uppercase tracking-widest mb-4">{t.impactTitle}</p>
+            <motion.p
+              initial={{ opacity: 0, scale: 0.5 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 100 }}
+              className="text-6xl md:text-8xl font-black text-gradient-primary mb-4"
+            >
+              {t.impactCount}
+            </motion.p>
+            <p className="text-xl text-foreground font-medium">{t.impactDesc}</p>
+            <p className="text-sm text-muted-foreground mt-2">{t.impactSub}</p>
           </motion.div>
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* ===== FINAL CTA ===== */}
       <section className="py-16 md:py-24">
         <div className="container">
           <motion.div
             {...fadeUp}
-            className="bg-gradient-hero rounded-3xl p-8 md:p-14 text-center text-primary-foreground space-y-6"
+            className="relative bg-gradient-hero rounded-[2rem] p-10 md:p-16 text-center text-primary-foreground overflow-hidden"
           >
-            <h2 className="text-2xl md:text-4xl font-bold">{t.finalCta}</h2>
-            <Link to="/app">
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="px-8 py-4 rounded-2xl bg-card text-primary font-semibold text-lg shadow-elevated hover:shadow-card transition-all"
-              >
-                🎤 {t.finalCtaBtn}
-              </motion.button>
-            </Link>
+            {/* Decorative overlay */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/20 -translate-y-1/2 translate-x-1/3" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white/10 translate-y-1/2 -translate-x-1/3" />
+            </div>
+
+            <div className="relative z-10 space-y-6 max-w-xl mx-auto">
+              <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">{t.finalCta}</h2>
+              <p className="text-primary-foreground/80 text-lg">{t.finalCtaDesc}</p>
+              <Link to="/app">
+                <motion.button
+                  whileHover={{ scale: 1.04, boxShadow: "0 12px 40px -8px hsl(0 0% 0% / 0.3)" }}
+                  whileTap={{ scale: 0.96 }}
+                  className="mt-4 px-10 py-5 rounded-2xl bg-card text-primary font-bold text-lg shadow-elevated transition-all"
+                >
+                  🎤 {t.finalCtaBtn}
+                </motion.button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 border-t border-border">
-        <div className="container flex items-center justify-center gap-2">
-          <img src={logo} alt="Sahayak AI" className="h-6 w-6" />
+      {/* ===== FOOTER ===== */}
+      <footer className="py-10 border-t border-border bg-secondary/50">
+        <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Sahayak AI" className="h-8 w-8" />
+            <span className="font-bold text-foreground">
+              Sahayak <span className="text-gradient-primary">AI</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            {t.trustItems.map((item, i) => (
+              <span key={i} className="flex items-center gap-1.5">
+                <CheckCircle size={12} className="text-primary" />
+                {item}
+              </span>
+            ))}
+          </div>
           <span className="text-sm text-muted-foreground">
-            Sahayak AI © {new Date().getFullYear()}
+            © {new Date().getFullYear()} Sahayak AI
           </span>
         </div>
       </footer>
