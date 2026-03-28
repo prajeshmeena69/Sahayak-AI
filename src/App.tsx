@@ -1,9 +1,10 @@
-import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { ChatProvider } from "@/context/ChatContext";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
 import LandingPage from "./pages/Index";
 import LoginPage from "./pages/LoginPage";
@@ -13,28 +14,44 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => {
-  const [lang, setLang] = useState<"hi" | "en" | "ta">("hi");
+/** Protect routes that require authentication */
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { authenticated, loading } = useAuth();
+  if (loading) return null;
+  return authenticated ? <>{children}</> : <Navigate to="/login" replace />;
+}
 
+function AppRoutes() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Navbar lang={lang} onSetLang={setLang} />
-          <Routes>
-            <Route path="/" element={<LandingPage lang={lang} />} />
-            <Route path="/login" element={<LoginPage lang={lang} />} />
-            <Route path="/chat" element={<ChatPage lang={lang} />} />
-            <Route path="/app" element={<ChatPage lang={lang} />} />
-            <Route path="/result" element={<ResultPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+        <Route path="/app" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+        <Route path="/result" element={<ProtectedRoute><ResultPage /></ProtectedRoute>} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
-};
+}
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Sonner />
+      <AuthProvider>
+        <ChatProvider>
+          <BrowserRouter>
+            <LanguageProvider>
+              <AppRoutes />
+            </LanguageProvider>
+          </BrowserRouter>
+        </ChatProvider>
+      </AuthProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;

@@ -1,29 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { ChevronDown, UserCircle, LogOut, Phone } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserCircle, LogOut, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useAuth } from "@/context/AuthContext";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-interface NavbarProps {
-  lang: "hi" | "en" | "ta";
-  onSetLang: (lang: "hi" | "en" | "ta") => void;
-}
-
-const langLabels: Record<string, string> = {
-  hi: "हिंदी",
-  en: "English",
-  ta: "தமிழ்",
-};
-
-const Navbar = ({ lang, onSetLang }: NavbarProps) => {
-  const [langOpen, setLangOpen] = useState(false);
+const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const langRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { t } = useLanguage();
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
     };
     document.addEventListener("mousedown", handler);
@@ -41,33 +32,7 @@ const Navbar = ({ lang, onSetLang }: NavbarProps) => {
         </Link>
 
         <div className="flex items-center gap-2">
-          {/* Language Selector */}
-          <div ref={langRef} className="relative">
-            <button
-              onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold bg-card border border-border shadow-soft text-foreground hover:bg-secondary transition-all"
-            >
-              {langLabels[lang]}
-              <ChevronDown size={14} className={`transition-transform ${langOpen ? "rotate-180" : ""}`} />
-            </button>
-            {langOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-36 bg-card rounded-2xl shadow-elevated border border-border overflow-hidden z-50">
-                {(["hi", "en", "ta"] as const).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => { onSetLang(l); setLangOpen(false); }}
-                    className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors ${
-                      lang === l
-                        ? "bg-primary-light text-primary font-bold"
-                        : "text-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    {langLabels[l]}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <LanguageSelector />
 
           {/* User Menu */}
           <div ref={menuRef} className="relative">
@@ -82,15 +47,15 @@ const Navbar = ({ lang, onSetLang }: NavbarProps) => {
                 <div className="px-4 py-3 border-b border-border">
                   <div className="flex items-center gap-2 text-sm text-foreground font-medium">
                     <Phone size={14} className="text-primary" />
-                    +91 98765 43210
+                    {user || "+91 XXXXX XXXXX"}
                   </div>
                 </div>
                 <button
-                  onClick={() => setMenuOpen(false)}
+                  onClick={async () => { await logout(); setMenuOpen(false); navigate("/"); }}
                   className="w-full text-left px-4 py-3 text-sm text-destructive font-medium hover:bg-destructive/5 transition-colors flex items-center gap-2"
                 >
                   <LogOut size={14} />
-                  Logout
+                  {t("nav.logout")}
                 </button>
               </div>
             )}
