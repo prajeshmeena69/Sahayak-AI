@@ -38,10 +38,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   });
 
   const loadTranslations = useCallback(async (code: LangCode) => {
-    if (translationCache.current[code]) {
-      setTranslations(translationCache.current[code]!);
+    // Invalidate cache if key count has changed (new keys added to BASE_STRINGS)
+    const cached = translationCache.current[code];
+    const baseKeyCount = Object.keys(BASE_STRINGS).length;
+    if (cached && Object.keys(cached).length === baseKeyCount) {
+      setTranslations(cached);
       return;
     }
+    // Remove stale cache entry
+    delete translationCache.current[code];
     setIsTranslating(true);
     try {
       const translated = await translateRecord(BASE_STRINGS as Record<string, string>, code);

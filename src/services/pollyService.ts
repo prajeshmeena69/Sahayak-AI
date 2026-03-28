@@ -18,7 +18,7 @@ const VOICE_MAP: Record<string, VoiceId> = {
  * Returns a blob URL that can be set as audio src.
  * Call URL.revokeObjectURL(url) after playback to free memory.
  */
-export async function synthesizeSpeech(text: string, language: "hi" | "en"): Promise<string> {
+export async function synthesizeSpeech(text: string, language: string): Promise<string> {
   const awsKey = import.meta.env.VITE_AWS_ACCESS_KEY_ID;
   if (!awsKey) {
     console.warn("AWS credentials not set, skipping Polly.");

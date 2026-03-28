@@ -1,6 +1,15 @@
 const LANG_NAME: Record<string, string> = {
   hi: "Hindi",
   en: "English",
+  bn: "Bengali",
+  te: "Telugu",
+  mr: "Marathi",
+  ta: "Tamil",
+  gu: "Gujarati",
+  kn: "Kannada",
+  ml: "Malayalam",
+  pa: "Punjabi",
+  or: "Odia",
 };
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
@@ -31,24 +40,24 @@ async function callModel(messages: Message[], maxTokens = 400): Promise<string> 
 }
 
 /**
- * Answer a farmer's question using full conversation history.
- * Asks follow-up questions if needed to gather enough info.
+ * General-purpose AI assistant for farmers.
+ * Answers any farming-related question in the farmer's language.
  */
-export async function askGemini(
+export async function askAI(
   history: Message[],
-  language: "hi" | "en"
+  language: string
 ): Promise<string> {
-  const langName = LANG_NAME[language];
+  const langName = LANG_NAME[language] ?? "Hindi";
 
-  const systemPrompt = `You are Sahayak AI, a helpful assistant for Indian farmers. Your job is to help farmers find government schemes they are eligible for.
+  const systemPrompt = `You are Sahayak AI, a friendly and knowledgeable assistant for Indian farmers. You help farmers with all their questions — government schemes, crop advice, weather, prices, diseases, loans, and anything else they need.
 
 Rules:
-- Always reply in simple ${langName} only
-- If you don't have enough information (land size, age, state, farmer status), ask ONE follow-up question at a time
-- Once you have enough info, tell the farmer which schemes they qualify for with scheme name, benefit amount, and how to apply
-- Keep replies short and simple (3-5 lines max)
-- Do NOT use markdown formatting, just plain text
-- Be warm and helpful`;
+- Always reply in simple, easy-to-understand ${langName} only
+- Keep replies concise (3-6 lines max) and practical
+- Be warm, supportive, and encouraging
+- Do NOT use markdown formatting — plain text only
+- If asked about government schemes, mention relevant ones with benefit amounts
+- If asked about crops, give practical actionable advice`;
 
   const messages: Message[] = [
     { role: "system", content: systemPrompt },
@@ -56,14 +65,15 @@ Rules:
   ];
 
   try {
-    const text = await callModel(messages);
+    const text = await callModel(messages, 500);
     if (!text) throw new Error("Empty response");
     return text;
   } catch (err: any) {
-    console.error("Gemini error:", err?.message || err);
-    return language === "hi"
-      ? "माफ़ करें, कुछ गड़बड़ हो गई। कृपया दोबारा कोशिश करें।"
-      : "Sorry, something went wrong. Please try again.";
+    console.error("AI error:", err?.message || err);
+    const langCode = language as keyof typeof LANG_NAME;
+    return langCode === "en"
+      ? "Sorry, something went wrong. Please try again."
+      : "माफ़ करें, कुछ गड़बड़ हो गई। कृपया दोबारा कोशिश करें।";
   }
 }
 
@@ -122,5 +132,54 @@ export async function simplifyResponse(
     return (await callModel([{ role: "user", content: prompt }])) || text;
   } catch {
     return text;
+  }
+}
+
+export interface SchemeResult {
+  name: string;
+  benefit: string;
+  description: string;
+  howToApply: string;
+}
+
+/**
+ * Find farmer schemes based on structured inputs.
+ */
+export async function findSchemes(params: {
+  state: string;
+  need: string;
+  landSize: string;
+  language: string;
+}): Promise<SchemeResult[]> {
+  const langName = LANG_NAME[params.language] ?? "Hindi";
+
+  const prompt = `You are an expert on Indian farmer schemes (both government and private).
+
+A farmer has provided the following details:
+- State: ${params.state}
+- Need: ${params.need}
+- Land size: ${params.landSize}
+
+List the TOP 4 most relevant schemes (government or private) for this farmer.
+
+IMPORTANT: Write the "description" and "howToApply" fields in ${langName} language only.
+
+Respond with ONLY a valid JSON array, no markdown, no extra text:
+[
+  {
+    "name": "Scheme name (keep original scheme name in English/Hindi)",
+    "benefit": "Benefit amount or description in ${langName}",
+    "description": "2-3 line description in simple ${langName}",
+    "howToApply": "One line on how to apply in ${langName}"
+  }
+]`;
+
+  try {
+    const raw = await callModel([{ role: "user", content: prompt }], 800);
+    const jsonMatch = raw.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) return [];
+    return JSON.parse(jsonMatch[0]) as SchemeResult[];
+  } catch {
+    return [];
   }
 }

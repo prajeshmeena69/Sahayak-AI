@@ -1,9 +1,9 @@
 import { createContext, useContext, useReducer, useRef, type ReactNode } from "react";
-import { askGemini, extractSchemeData } from "@/services/geminiService";
+import { askAI } from "@/services/geminiService";
 import { synthesizeSpeech } from "@/services/pollyService";
 
 export type Lang = "hi" | "en";
-export type ChatStatus = "idle" | "listening" | "processing" | "done";
+export type ChatStatus = "idle" | "processing" | "done";
 
 export interface ChatMessage {
   from: "bot" | "user";
@@ -11,38 +11,18 @@ export interface ChatMessage {
   audioUrl?: string;
 }
 
-export interface SchemeResult {
-  eligible: boolean;
-  schemeName: string;
-  benefit: string;
-  reason: string;
-  steps: string[];
-  docs: string[];
-  lang: Lang;
-  audioUrl?: string;
-}
-
 interface ChatState {
   status: ChatStatus;
   messages: ChatMessage[];
-  error: string | null;
-  schemeResult: SchemeResult | null;
 }
 
 type ChatAction =
   | { type: "SET_STATUS"; payload: ChatStatus }
   | { type: "ADD_MESSAGE"; payload: ChatMessage }
   | { type: "SET_AUDIO_ON_LAST"; payload: string }
-  | { type: "SET_SCHEME_RESULT"; payload: SchemeResult }
-  | { type: "SET_ERROR"; payload: string | null }
   | { type: "RESET" };
 
-const initialState: ChatState = {
-  status: "idle",
-  messages: [],
-  error: null,
-  schemeResult: null,
-};
+const initialState: ChatState = { status: "idle", messages: [] };
 
 function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
@@ -53,8 +33,6 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       if (msgs.length > 0) msgs[msgs.length - 1] = { ...msgs[msgs.length - 1], audioUrl: action.payload };
       return { ...state, messages: msgs };
     }
-    case "SET_SCHEME_RESULT": return { ...state, schemeResult: action.payload };
-    case "SET_ERROR": return { ...state, error: action.payload };
     case "RESET": return { ...initialState };
     default: return state;
   }
@@ -62,7 +40,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
 
 interface ChatContextValue {
   state: ChatState;
-  handleUserSpeech: (transcript: string, lang: Lang) => Promise<void>;
+  sendMessage: (text: string, lang: string) => Promise<void>;
   resetChat: () => void;
 }
 
@@ -70,44 +48,27 @@ const ChatContext = createContext<ChatContextValue | null>(null);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(chatReducer, initialState);
-  // Track full conversation history for context
   const historyRef = useRef<{ role: string; content: string }[]>([]);
 
-  const handleUserSpeech = async (transcript: string, lang: Lang) => {
-    dispatch({ type: "ADD_MESSAGE", payload: { from: "user", text: transcript } });
+  const sendMessage = async (text: string, lang: string) => {
+    dispatch({ type: "ADD_MESSAGE", payload: { from: "user", text } });
     dispatch({ type: "SET_STATUS", payload: "processing" });
 
-    // Add user message to history
-    historyRef.current.push({ role: "user", content: transcript });
+    historyRef.current.push({ role: "user", content: text });
 
     try {
-      // Ask Gemini with full conversation history
-      const reply = await askGemini(historyRef.current, lang);
-
-      // Add bot reply to history
+      const reply = await askAI(historyRef.current, lang);
       historyRef.current.push({ role: "assistant", content: reply });
 
-      // Show bot reply in chat
       dispatch({ type: "ADD_MESSAGE", payload: { from: "bot", text: reply } });
 
-      // Generate audio
-      const audioUrl = await synthesizeSpeech(reply, lang);
+      // Generate audio for the bot reply
+      const audioUrl = await synthesizeSpeech(reply, lang as Lang);
       if (audioUrl) dispatch({ type: "SET_AUDIO_ON_LAST", payload: audioUrl });
-
-      // Check if Gemini has enough info to show result page
-      const schemeData = await extractSchemeData(historyRef.current, lang);
-      if (schemeData) {
-        const resultAudioUrl = await synthesizeSpeech(schemeData.reason, lang);
-        dispatch({
-          type: "SET_SCHEME_RESULT",
-          payload: { ...schemeData, lang, audioUrl: resultAudioUrl || undefined },
-        });
-      }
 
       dispatch({ type: "SET_STATUS", payload: "done" });
     } catch (err) {
       console.error(err);
-      dispatch({ type: "SET_ERROR", payload: "Something went wrong." });
       dispatch({ type: "SET_STATUS", payload: "idle" });
     }
   };
@@ -118,7 +79,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ChatContext.Provider value={{ state, handleUserSpeech, resetChat }}>
+    <ChatContext.Provider value={{ state, sendMessage, resetChat }}>
       {children}
     </ChatContext.Provider>
   );

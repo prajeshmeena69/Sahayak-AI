@@ -16,7 +16,7 @@ const FEATURE_COLORS = ["primary", "accent", "warm", "primary"];
 const LandingPage = () => {
   const { t } = useLanguage();
   const { authenticated } = useAuth();
-  const ctaPath = authenticated ? "/chat" : "/login";
+  const ctaPath = authenticated ? "/menu" : "/login";
 
   const fadeUp = {
     initial: { opacity: 0, y: 30 },
@@ -248,7 +248,7 @@ const LandingPage = () => {
               <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">{t("home.finalCta")}</h2>
               <p className="text-primary-foreground/80 text-lg">{t("home.finalCtaDesc")}</p>
               <Link to={ctaPath}>
-                <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="mt-4 px-10 py-5 rounded-2xl bg-card text-primary font-bold text-lg shadow-elevated transition-all">🎤 {t("home.finalCtaBtn")}</motion.button>
+                <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="mt-4 px-10 py-5 rounded-2xl bg-card text-primary font-bold text-lg shadow-elevated transition-all">{t("home.finalCtaBtn")}</motion.button>
               </Link>
             </div>
           </motion.div>

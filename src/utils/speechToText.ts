@@ -1,15 +1,9 @@
 type ResultCallback = (transcript: string) => void;
 type ErrorCallback = (error: string) => void;
 
-const LANG_CODE: Record<string, string> = {
-  hi: "hi-IN",
-  en: "en-IN",
-  ta: "ta-IN",
-  mr: "mr-IN",
-  bn: "bn-IN",
-};
-
 let recognition: SpeechRecognition | null = null;
+let accumulatedTranscript = "";
+let pendingResultCallback: ResultCallback | null = null;
 
 function getSpeechRecognition(): typeof SpeechRecognition | null {
   return (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition || null;
@@ -20,7 +14,7 @@ export function isSpeechSupported(): boolean {
 }
 
 export function startListening(
-  language: "hi" | "en",
+  speechLocale: string,
   onResult: ResultCallback,
   onError: ErrorCallback
 ): void {
@@ -30,43 +24,65 @@ export function startListening(
     return;
   }
 
-  stopListening(); // stop any existing session
+  stopListening();
+
+  accumulatedTranscript = "";
+  pendingResultCallback = onResult;
 
   recognition = new SR();
-  recognition.lang = LANG_CODE[language] || "hi-IN";
-  recognition.interimResults = false;
+  recognition.lang = speechLocale;
+  recognition.interimResults = true;
   recognition.maxAlternatives = 1;
-  recognition.continuous = false;
+  recognition.continuous = true; // keep listening until user clicks stop
 
   recognition.onresult = (event: SpeechRecognitionEvent) => {
-    const transcript = event.results[0]?.[0]?.transcript?.trim();
-    if (transcript) onResult(transcript);
+    let interim = "";
+    let final = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
+      if (result.isFinal) {
+        final += result[0].transcript;
+      } else {
+        interim += result[0].transcript;
+      }
+    }
+    if (final) accumulatedTranscript += (accumulatedTranscript ? " " : "") + final.trim();
   };
 
   recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    if (event.error === "no-speech") return; // ignore silence, keep listening
     const msg =
       event.error === "not-allowed"
         ? "Microphone access denied. Please allow microphone permission."
-        : event.error === "no-speech"
-        ? "No speech detected. Please try again."
         : `Speech error: ${event.error}`;
     onError(msg);
   };
 
   recognition.onend = () => {
-    recognition = null;
+    // Auto-restarted by browser — restart to keep continuous listening
+    if (recognition) {
+      try { recognition.start(); } catch { /* already stopped by user */ }
+    }
   };
 
   recognition.start();
 }
 
+/**
+ * Stop listening and fire the result callback with everything recorded so far.
+ */
 export function stopListening(): void {
   if (recognition) {
-    try {
-      recognition.stop();
-    } catch {
-      // ignore
-    }
+    // Detach onend so we don't auto-restart
+    recognition.onend = null;
+    try { recognition.stop(); } catch { /* ignore */ }
     recognition = null;
   }
+
+  if (pendingResultCallback && accumulatedTranscript.trim()) {
+    pendingResultCallback(accumulatedTranscript.trim());
+  }
+
+  accumulatedTranscript = "";
+  pendingResultCallback = null;
 }
